@@ -12,20 +12,6 @@ struct Profile: Codable {
     let ins: [String]
     let sna: [String]
     let pho: [String]
-    
-    func numberOfSections() -> Int{
-        var sum = 0
-        if ins.count != 0 {
-            sum += 1;
-        }
-        if sna.count != 0 {
-            sum += 1;
-        }
-        if sna.count != 0 {
-            sum += 1;
-        }
-        return sum
-    }
 }
 
 class MeCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {

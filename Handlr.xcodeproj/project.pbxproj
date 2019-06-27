@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5F3B7D0D22C2CCC800D2A0CC /* NewFriendTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3B7D0C22C2CCC800D2A0CC /* NewFriendTableViewController.swift */; };
+		5F3B7D0F22C2D18F00D2A0CC /* NewFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3B7D0E22C2D18F00D2A0CC /* NewFriendTableViewCell.swift */; };
 		5FEBC26C217EC28900DA90D6 /* MeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEBC26B217EC28900DA90D6 /* MeCollectionViewCell.swift */; };
 		5FEBC26E217EC2F800DA90D6 /* MeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEBC26D217EC2F800DA90D6 /* MeCollectionViewController.swift */; };
 		5FF82085217C040900130CD0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF82084217C040900130CD0 /* AppDelegate.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		5F3B7D0C22C2CCC800D2A0CC /* NewFriendTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFriendTableViewController.swift; sourceTree = "<group>"; };
+		5F3B7D0E22C2D18F00D2A0CC /* NewFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFriendTableViewCell.swift; sourceTree = "<group>"; };
 		5FEBC26B217EC28900DA90D6 /* MeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeCollectionViewCell.swift; sourceTree = "<group>"; };
 		5FEBC26D217EC2F800DA90D6 /* MeCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeCollectionViewController.swift; sourceTree = "<group>"; };
 		5FF82081217C040900130CD0 /* Handlr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Handlr.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +108,7 @@
 				5FF82084217C040900130CD0 /* AppDelegate.swift */,
 				5FF82086217C040900130CD0 /* ScanController.swift */,
 				5F3B7D0C22C2CCC800D2A0CC /* NewFriendTableViewController.swift */,
+				5F3B7D0E22C2D18F00D2A0CC /* NewFriendTableViewCell.swift */,
 				5FEBC26D217EC2F800DA90D6 /* MeCollectionViewController.swift */,
 				5FEBC26B217EC28900DA90D6 /* MeCollectionViewCell.swift */,
 				5FF8208E217C040B00130CD0 /* Assets.xcassets */,
@@ -271,6 +274,7 @@
 				5FF82087217C040900130CD0 /* ScanController.swift in Sources */,
 				5F3B7D0D22C2CCC800D2A0CC /* NewFriendTableViewController.swift in Sources */,
 				5FF82085217C040900130CD0 /* AppDelegate.swift in Sources */,
+				5F3B7D0F22C2D18F00D2A0CC /* NewFriendTableViewCell.swift in Sources */,
 				5FF8208D217C040A00130CD0 /* Handlr.xcdatamodeld in Sources */,
 				5FEBC26E217EC2F800DA90D6 /* MeCollectionViewController.swift in Sources */,
 			);

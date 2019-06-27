@@ -29,9 +29,18 @@ struct PhoneNumber: Account {
     var data: String
 }
 
-class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+protocol CardViewDelegate {
+    func updateCardPosition(offset: CGFloat)
+    func releaseCard(velocity: CGFloat)
+    func totalOffset() -> CGFloat
+    func maxOffset() -> CGFloat
+}
+
+class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CardViewDelegate, UIGestureRecognizerDelegate {
 
     var video = AVCaptureVideoPreviewLayer()
+    let notificationGenerator = UINotificationFeedbackGenerator()
+    let touchView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,13 +54,104 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Me", style: .plain, target: self, action: #selector(showMeView))
 
         startCapturing()
+        setupCard()
+        setupTouchView()
+        setupTouchRecognizer()
         
+    }
+    
+    func setupTouchRecognizer() {
+        let touchRecognizer = UILongPressGestureRecognizer(target:self, action: #selector(dismissCard(gesture:)))
+        touchRecognizer.minimumPressDuration = 0
+        touchView.addGestureRecognizer(touchRecognizer)
+    }
+    
+    func setupTouchView() {
+        view.addSubview(touchView)
+        touchView.translatesAutoresizingMaskIntoConstraints = false
+        touchView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        touchView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -maxCardHeight).isActive = true
+        touchView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        touchView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
     @objc func showMeView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         navigationController?.pushViewController(MeCollectionViewController(collectionViewLayout: layout), animated: true)
+    }
+    
+    let cardView = NewFriendTableViewController()
+    var cardTopConstraint: NSLayoutConstraint!
+    let maxCardHeight: CGFloat = 500.0
+    func setupCard() {
+        
+        cardView.view.isHidden = true
+        
+        cardView.delegate = self
+        self.addChild(cardView)
+        
+        view.addSubview(cardView.view)
+        cardView.view.translatesAutoresizingMaskIntoConstraints = false
+        cardView.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        cardView.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        cardView.view.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        cardTopConstraint = cardView.view.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 50)
+        cardTopConstraint.isActive = true
+        
+        cardView.view.frame = CGRect(x: 0, y: view.frame.height-150, width: view.frame.width, height: view.frame.height)
+        cardView.setProfile(profile: Profile(ins: ["XaviHub18", "OsciHub"], sna: ["XaviHub"], pho: ["214-926-7723"]))
+        cardView.view.clipsToBounds = true
+        
+        
+    }
+    
+    func updateCardPosition(offset: CGFloat) {
+        cardTopConstraint.constant += offset
+        if cardTopConstraint.constant < -maxCardHeight {
+            cardTopConstraint.constant = -maxCardHeight
+        }
+    }
+    
+    func releaseCard(velocity: CGFloat) {
+        if velocity < -1.0 {
+            cardTopConstraint.constant = 0
+            displayingData = false
+        } else {
+            cardTopConstraint.constant = -maxCardHeight
+        }
+        UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: velocity, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
+            self.view.layoutIfNeeded()
+        }) { (finished) in
+            self.cardView.view.isHidden = !self.displayingData
+        }
+    }
+    
+    func totalOffset() -> CGFloat {
+        return cardTopConstraint.constant
+    }
+    func maxOffset() -> CGFloat {
+        return -maxCardHeight
+    }
+    
+    @objc func dismissCard(gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            cardTopConstraint.constant = 0
+            displayingData = false
+            UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
+                self.view.layoutIfNeeded()
+            }) { (finished) in
+                self.cardView.view.isHidden = !self.displayingData
+            }
+        }
+    }
+    
+    func showCard() {
+        cardView.view.isHidden = false
+        cardTopConstraint.constant = -maxCardHeight
+        UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: UIView.AnimationOptions.curveEaseInOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     func startCapturing() {
@@ -77,6 +177,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         video.videoGravity = .resizeAspectFill
         video.frame = view.layer.bounds
         view.layer.addSublayer(video)
+        
                 
         session.startRunning()
     }
@@ -89,36 +190,30 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
+                    notificationGenerator.notificationOccurred(.success)
                     displayingData = true
                     let me = getMeFromString(string: object.stringValue ?? "")
                     var alertString = ""
                     var alert = UIAlertController()
                     if let me = me {
-                        if let ins = me.ins {
-                            for anIns in ins {
-                                alertString.append(contentsOf: "Instagram: " + anIns + "\n")
-                                scannedAccounts.append(Instagram(data: anIns))
-                            }
+                        for anIns in me.ins {
+                            alertString.append(contentsOf: "Instagram: " + anIns + "\n")
+                            scannedAccounts.append(Instagram(data: anIns))
                         }
-                        if let sna = me.sna {
-                            for aSna in sna {
-                                alertString.append(contentsOf: "Snapchat: " + aSna + "\n")
-                                scannedAccounts.append(Snapchat(data: aSna))
-                            }
+                        for aSna in me.sna {
+                            alertString.append(contentsOf: "Snapchat: " + aSna + "\n")
+                            scannedAccounts.append(Snapchat(data: aSna))
                         }
-                        if let pho = me.pho {
-                            for aPho in pho {
-                                alertString.append(contentsOf: "Phone: " + aPho + "\n")
-                                scannedAccounts.append(PhoneNumber(data: aPho))
-                            }
+                        for aPho in me.pho {
+                            alertString.append(contentsOf: "Phone: " + aPho + "\n")
+                            scannedAccounts.append(PhoneNumber(data: aPho))
                         }
                         alert = UIAlertController(title: "QR Code", message: alertString, preferredStyle: .alert)
                     } else {
                         alert = UIAlertController(title: "QR Code", message: "Not Recognized", preferredStyle: .alert)
                     }
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    present(alert, animated: true, completion: nil)
-                    displayingData = false
+                    showCard()
                 }
             }
         }
