@@ -1,21 +1,29 @@
 //
-//  MeCollectionViewCell.swift
+//  MyProfileViewController.swift
 //  Handlr
 //
-//  Created by Xavi Anderhub on 10/22/18.
-//  Copyright © 2018 Xavi Anderhub. All rights reserved.
+//  Created by Xavi Anderhub on 7/1/19.
+//  Copyright © 2019 Xavi Anderhub. All rights reserved.
 //
 
 import UIKit
 
-class MeCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
-    
-    
+class MyProfileViewController: UIViewController {
+
     var profile: Profile!
     var collectionView: MeCollectionViewController!
     let tableView = UITableView()
     var accounts = [Account]()
     let cellID = "meCell"
+    
+    init(profile: Profile) {
+        self.profile = profile
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var meView: UIView = {
         let view = UIView()
@@ -37,49 +45,57 @@ class MeCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableVi
         iv.backgroundColor = .red
         return iv
     }()
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupViews()
+        
+    
+    }
 
-    var isEditing = false
     
     func setProfile(profile: Profile) {
         self.profile = profile
         
     }
     
-    func setupViews(profile: Profile, isEditing: Bool) {
+    func setupViews() {
         setProfile(profile: profile)
         setEditing(editing: isEditing)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         
-        backgroundColor = .clear
+        view.backgroundColor = .clear
         
         
-        addSubview(meView)
-        addSubview(imageView)
-        addSubview(tableView)
-                
+        view.addSubview(meView)
+        view.addSubview(imageView)
+        view.addSubview(tableView)
+        
         meView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         
-        meView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.9).isActive = true
-        meView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
-        meView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.9).isActive = true
-        meView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+        meView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.9).isActive = true
+        meView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        meView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9).isActive = true
+        meView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         
-        imageView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.95).isActive = true
-        imageView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.95).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
-        imageView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
         
-        tableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-
+        
         setEditing(editing: isEditing)
-                
+        
         
         
     }
@@ -118,7 +134,7 @@ class MeCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableVi
         let transform = CGAffineTransform(scaleX: 100, y: 100)
         return UIImage(ciImage: filter!.outputImage!.transformed(by: transform))
     }
-
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return profile.getAccounts().count
@@ -129,6 +145,5 @@ class MeCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableVi
         return cell
     }
     
-    
-    
+
 }

@@ -18,16 +18,17 @@ class NewFriendTableViewController: UITableViewController {
     // Fills accounts when profile is set
     func setProfile(profile: Profile) {
         self.profile = profile
-        accounts = []
-        for ins in profile.ins {
-            accounts.append(Instagram(data: ins))
-        }
-        for sna in profile.sna {
-            accounts.append(Snapchat(data: sna))
-        }
-        for pho in profile.pho {
-            accounts.append(PhoneNumber(data: pho))
-        }
+        accounts = profile.getAccounts()
+//        accounts = []
+//        for ins in profile.ins {
+//            accounts.append(Instagram(data: ins))
+//        }
+//        for sna in profile.sna {
+//            accounts.append(Snapchat(data: sna))
+//        }
+//        for pho in profile.pho {
+//            accounts.append(PhoneNumber(data: pho))
+//        }
         tableView.reloadData()
     }
     

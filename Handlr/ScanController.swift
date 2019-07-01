@@ -70,7 +70,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         view.addSubview(touchView)
         touchView.translatesAutoresizingMaskIntoConstraints = false
         touchView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        touchView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -maxCardHeight).isActive = true
+        touchView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -maxCardHeight   ).isActive = true
         touchView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         touchView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
