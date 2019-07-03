@@ -94,30 +94,12 @@ class MeCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableVi
         } else {
             meView.isHidden = true
             imageView.isHidden = false
-            imageView.image = getQRImage()
+            imageView.image = profile.getQRImage()
             tableView.isHidden = true
         }
     }
     
     
-    func getQRImage() -> UIImage {
-        var jsonData: Data = Data()
-        do {
-            jsonData = try JSONEncoder().encode(profile)
-        } catch {print(error)}
-        
-        /* JSON string should be:
-         {"ins":["XaviHub"],"sna":["XaviHub8"],"pho":["214-926-7723"]}
-         
-         
-         */
-        
-        let filter = CIFilter(name: "CIQRCodeGenerator")
-        filter?.setValue(jsonData, forKey: "inputMessage")
-        
-        let transform = CGAffineTransform(scaleX: 100, y: 100)
-        return UIImage(ciImage: filter!.outputImage!.transformed(by: transform))
-    }
 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

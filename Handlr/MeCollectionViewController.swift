@@ -8,28 +8,7 @@
 
 import UIKit
 
-struct Profile: Codable {
-    let ins: [String]
-    let sna: [String]
-    let pho: [String]
-    
-    func getAccounts() -> [Account] {
-        var accounts = [Account]()
-        for ins in ins {
-            accounts.append(Instagram(data: ins))
-        }
-        for sna in sna {
-            accounts.append(Snapchat(data: sna))
-        }
-        for pho in pho {
-            accounts.append(PhoneNumber(data: pho))
-        }
-        return accounts
-    }
-}
-
 class MeCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    
     
     
     override func viewDidLoad() {
@@ -75,7 +54,7 @@ class MeCollectionViewController: UICollectionViewController, UICollectionViewDe
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! MeCollectionViewCell
-        cell.setupViews(profile: Profile(ins: ["XaviHub18", "OsciHub"], sna: ["XaviHub"], pho: ["214-926-7723"]), isEditing: isEditing)
+        cell.setupViews(profile: Profile(name: "Xavi Anderhub", ins: ["XaviHub18", "OsciHub"], sna: ["XaviHub"], pho: ["214-926-7723"]), isEditing: isEditing)
         return cell
     }
     

@@ -10,14 +10,14 @@ import UIKit
 
 class MyProfileViewController: UIViewController {
 
-    var profile: Profile!
+    var profileData: ProfileData!
     var collectionView: MeCollectionViewController!
     let tableView = UITableView()
     var accounts = [Account]()
     let cellID = "meCell"
     
-    init(profile: Profile) {
-        self.profile = profile
+    init(profileData: ProfileData) {
+        self.profileData = profileData
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -56,13 +56,13 @@ class MyProfileViewController: UIViewController {
     }
 
     
-    func setProfile(profile: Profile) {
-        self.profile = profile
+    func setProfileData(profileData: ProfileData) {
+        self.profileData = profileData
         
     }
     
     func setupViews() {
-        setProfile(profile: profile)
+        setProfileData(profileData: profileData)
         setEditing(editing: isEditing)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         
@@ -97,12 +97,14 @@ class MyProfileViewController: UIViewController {
         setEditing(editing: isEditing)
         
         
-        
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        setEditing(editing: editing)
     }
     
     
     func setEditing(editing: Bool) {
-        isEditing = editing
         if editing {
             meView.isHidden = false
             imageView.isHidden = true
@@ -110,34 +112,15 @@ class MyProfileViewController: UIViewController {
         } else {
             meView.isHidden = true
             imageView.isHidden = false
-            imageView.image = getQRImage()
+            imageView.image = profileData.profile!.getQRImage()
             tableView.isHidden = true
         }
     }
     
     
-    func getQRImage() -> UIImage {
-        var jsonData: Data = Data()
-        do {
-            jsonData = try JSONEncoder().encode(profile)
-        } catch {print(error)}
-        
-        /* JSON string should be:
-         {"ins":["XaviHub"],"sna":["XaviHub8"],"pho":["214-926-7723"]}
-         
-         
-         */
-        
-        let filter = CIFilter(name: "CIQRCodeGenerator")
-        filter?.setValue(jsonData, forKey: "inputMessage")
-        
-        let transform = CGAffineTransform(scaleX: 100, y: 100)
-        return UIImage(ciImage: filter!.outputImage!.transformed(by: transform))
-    }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return profile.getAccounts().count
+        return profileData.profile!.getAccounts().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
