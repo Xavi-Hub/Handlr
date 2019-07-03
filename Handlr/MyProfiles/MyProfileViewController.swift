@@ -63,11 +63,8 @@ class MyProfileViewController: UIViewController {
     
     func setupViews() {
         setProfileData(profileData: profileData)
-        setEditing(editing: isEditing)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
-        
-        view.backgroundColor = .clear
-        
+                
         
         view.addSubview(meView)
         view.addSubview(imageView)
@@ -94,17 +91,13 @@ class MyProfileViewController: UIViewController {
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         
-        setEditing(editing: isEditing)
+        setEditing(isEditing, animated: true)
         
         
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
-        setEditing(editing: editing)
-    }
-    
-    
-    func setEditing(editing: Bool) {
+        super.setEditing(editing, animated: animated)
         if editing {
             meView.isHidden = false
             imageView.isHidden = true
@@ -116,7 +109,6 @@ class MyProfileViewController: UIViewController {
             tableView.isHidden = true
         }
     }
-    
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

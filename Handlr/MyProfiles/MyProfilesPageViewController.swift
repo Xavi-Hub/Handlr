@@ -22,6 +22,11 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataSource = self
+        delegate = self
+        
+        setupViews()
+        
         addButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addProfile))
         
         navigationItem.rightBarButtonItems = [addButton,editButtonItem]
@@ -65,7 +70,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         let predicate = NSPredicate(format: "isMine = %d", true)
         request.predicate = predicate
         profilesData = try? AppDelegate.viewContext.fetch(request)
-        
+        print(profilesData.count)
         profileViewControllers = []
         for profile in profilesData ?? [ProfileData]() {
             let profileVC = MyProfileViewController(profileData: profile)
@@ -74,13 +79,22 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     }
     
     func setupViews() {
+        
         view.addSubview(pageControl)
+        view.bringSubviewToFront(pageControl)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         
         pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         pageControl.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
         pageControl.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        for vc in profileViewControllers {
+            vc.setEditing(editing, animated: animated)
+        }
     }
     
     @objc func addProfile() {
@@ -92,6 +106,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         profilesData.append(profileData)
         profileViewControllers.append(MyProfileViewController(profileData: profileData))
         pageControl.numberOfPages += 1
+        setViewControllers([profileViewControllers.last!], direction: .forward, animated: true, completion: nil)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {

@@ -78,7 +78,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     @objc func showMeView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        navigationController?.pushViewController(MyProfilesPageViewController(), animated: true)
+        navigationController?.pushViewController(MyProfilesPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil), animated: true)
     }
     
     let cardView = NewFriendTableViewController()
