@@ -78,7 +78,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     @objc func showMeView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        navigationController?.pushViewController(MeCollectionViewController(collectionViewLayout: layout), animated: true)
+        navigationController?.pushViewController(MyProfilesPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil), animated: true)
     }
     
     let cardView = NewFriendTableViewController()
@@ -100,7 +100,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         cardTopConstraint.isActive = true
         
         cardView.view.frame = CGRect(x: 0, y: view.frame.height-150, width: view.frame.width, height: view.frame.height)
-        cardView.setProfile(profile: Profile(ins: ["XaviHub18", "OsciHub"], sna: ["XaviHub"], pho: ["214-926-7723"]))
+        cardView.setProfile(profile: Profile(name: "Xavi Anderhub", ins: ["XaviHub18", "OsciHub"], sna: ["XaviHub"], pho: ["214-926-7723"]))
         cardView.view.clipsToBounds = true
         
         
@@ -192,7 +192,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
                 if object.type == AVMetadataObject.ObjectType.qr {
                     notificationGenerator.notificationOccurred(.success)
                     displayingData = true
-                    let me = getMeFromString(string: object.stringValue ?? "")
+                    let me = Profile.getProfileFromString(string: object.stringValue ?? "")
                     var alertString = ""
                     var alert = UIAlertController()
                     if let me = me {
@@ -218,16 +218,6 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
             }
         }
     }
-
-    func getMeFromString(string: String) -> Profile? {
-        do {
-            let me = try JSONDecoder().decode(Profile.self, from: string.data(using: .utf8)!)
-            return me
-        } catch {
-            print(error)
-            return nil
-        }
-        
-    }
     
 }
+
