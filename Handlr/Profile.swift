@@ -9,22 +9,43 @@
 import Foundation
 import UIKit
 
+protocol SAccount: Codable {
+    var data: String {get set}
+}
+
+struct SSnapchat: SAccount {
+    var data: String
+}
+
+struct SInstagram: SAccount {
+    var data: String
+}
+
+struct SFacebook: SAccount {
+    var data: String
+}
+
+struct SPhoneNumber: SAccount {
+    var data: String
+}
+
+
 struct Profile: Codable {
     let name: String
     let ins: [String]
     let sna: [String]
     let pho: [String]
     
-    func getAccounts() -> [Account] {
-        var accounts = [Account]()
+    func getAccounts() -> [SAccount] {
+        var accounts = [SAccount]()
         for ins in ins {
-            accounts.append(Instagram(data: ins))
+            accounts.append(SInstagram(data: ins))
         }
         for sna in sna {
-            accounts.append(Snapchat(data: sna))
+            accounts.append(SSnapchat(data: sna))
         }
         for pho in pho {
-            accounts.append(PhoneNumber(data: pho))
+            accounts.append(SPhoneNumber(data: pho))
         }
         return accounts
     }

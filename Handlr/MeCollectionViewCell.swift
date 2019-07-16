@@ -107,7 +107,7 @@ class MeCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID) as! MeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID) as! MyProfileTableViewCell
         return cell
     }
     

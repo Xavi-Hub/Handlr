@@ -14,23 +14,35 @@ class ProfileData: NSManagedObject {
     var profile: Profile? {
         get {
             do {
-                let profile = try JSONDecoder().decode(Profile.self, from: (data ?? "").data(using: .utf8)!)
+                var inss = [String]()
+                var snas = [String]()
+                var phos = [String]()
+                for anAcct in Array(accounts ?? NSSet()) {
+                    if let anIns = anAcct as? Instagram {
+                        inss.append(anIns.data ?? "")
+                    }
+                    if let aSna = anAcct as? Snapchat {
+                        snas.append(aSna.data ?? "")
+                    }
+                    if let aPho = anAcct as? Phone {
+                        phos.append(aPho.data ?? "")
+                    }
+                }
+                let profile = Profile(name: name ?? "", ins: inss, sna: snas, pho: phos)
                 return profile
-            } catch {
-                print(error)
-                return nil
+//                let profile = try JSONDecoder().decode(Profile.self, from: (data ?? "").data(using: .utf8)!)
             }
         }
         
-        set {
-            var jsonData: Data = Data()
-            do {
-                jsonData = try JSONEncoder().encode(newValue)
-                let theString = String(data: jsonData, encoding: .utf8)
-                data = theString
-            } catch {print(error)}
-            
-        }
+//        set {
+//            var jsonData: Data = Data()
+//            do {
+//                jsonData = try JSONEncoder().encode(newValue)
+//                let theString = String(data: jsonData, encoding: .utf8)
+//                data = theString
+//            } catch {print(error)}
+//
+//        }
     }
 
     

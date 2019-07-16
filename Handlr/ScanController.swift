@@ -9,26 +9,6 @@
 import UIKit
 import AVFoundation
 
-protocol Account: Codable {
-    var data: String {get set}
-}
-
-struct Snapchat: Account {
-    var data: String
-}
-
-struct Instagram: Account {
-    var data: String
-}
-
-struct Facebook: Account {
-    var data: String
-}
-
-struct PhoneNumber: Account {
-    var data: String
-}
-
 protocol CardViewDelegate {
     func updateCardPosition(offset: CGFloat)
     func releaseCard(velocity: CGFloat)
@@ -183,7 +163,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     }
 
     var displayingData = false
-    var scannedAccounts: [Account] = []
+    var scannedAccounts: [SAccount] = []
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if displayingData {return}
@@ -198,15 +178,15 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
                     if let me = me {
                         for anIns in me.ins {
                             alertString.append(contentsOf: "Instagram: " + anIns + "\n")
-                            scannedAccounts.append(Instagram(data: anIns))
+                            scannedAccounts.append(SInstagram(data: anIns))
                         }
                         for aSna in me.sna {
                             alertString.append(contentsOf: "Snapchat: " + aSna + "\n")
-                            scannedAccounts.append(Snapchat(data: aSna))
+                            scannedAccounts.append(SSnapchat(data: aSna))
                         }
                         for aPho in me.pho {
                             alertString.append(contentsOf: "Phone: " + aPho + "\n")
-                            scannedAccounts.append(PhoneNumber(data: aPho))
+                            scannedAccounts.append(SPhoneNumber(data: aPho))
                         }
                         alert = UIAlertController(title: "QR Code", message: alertString, preferredStyle: .alert)
                     } else {

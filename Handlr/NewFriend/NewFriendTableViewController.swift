@@ -12,7 +12,7 @@ class NewFriendTableViewController: UITableViewController {
 
     let cellID = "friendCell"
     private var profile: Profile?
-    var accounts = [Account]()
+    var accounts = [SAccount]()
     var delegate: CardViewDelegate!
     
     // Fills accounts when profile is set

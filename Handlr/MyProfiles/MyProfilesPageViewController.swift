@@ -16,11 +16,12 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     var currentIndex: Int?
     var pendingIndex: Int?
     var profilesData: [ProfileData]!
-    var profileViewControllers = [MyProfileViewController]()
     var addButton: UIBarButtonItem! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
         
         dataSource = self
         delegate = self
@@ -29,8 +30,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         
         addButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addProfile))
         
-        navigationItem.rightBarButtonItems = [addButton,editButtonItem]
-        
+        navigationItem.rightBarButtonItems = [editButtonItem]
 
     }
     
@@ -38,14 +38,14 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         super.viewWillAppear(animated)
         fetchData()
         
-        if profileViewControllers.isEmpty {
+        if profilesData.isEmpty {
             setViewControllers([NoProfilesViewController()], direction: .forward, animated: false, completion: nil)
         } else {
-            setViewControllers([(profileViewControllers[startIndex])], direction: .forward, animated: false, completion: nil)
+            setViewControllers([MyProfileViewController(profileData: profilesData[startIndex])], direction: .forward, animated: false, completion: nil)
         }
         
         
-        pageControl.numberOfPages = profileViewControllers.count
+        pageControl.numberOfPages = profilesData.count
         pageControl.currentPage = startIndex
 
     }
@@ -55,7 +55,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         if let viewControllers = viewControllers {
             if viewControllers.count > 0 {
                 if let profileVC = viewControllers[0] as? MyProfileViewController {
-                    startIndex = profileViewControllers.firstIndex(of: profileVC) ?? 0
+                    startIndex = profilesData.firstIndex(of: profileVC.profileData) ?? 0
                     return
                 }
             }
@@ -71,11 +71,6 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         request.predicate = predicate
         profilesData = try? AppDelegate.viewContext.fetch(request)
         print(profilesData.count)
-        profileViewControllers = []
-        for profile in profilesData ?? [ProfileData]() {
-            let profileVC = MyProfileViewController(profileData: profile)
-            profileViewControllers.append(profileVC)
-        }
     }
     
     func setupViews() {
@@ -92,26 +87,30 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        for vc in profileViewControllers {
-            vc.setEditing(editing, animated: animated)
+        if let profileVC = viewControllers![0] as? MyProfileViewController {
+            profileVC.setEditing(editing, animated: animated)
+        }
+        
+        if editing {
+            navigationItem.rightBarButtonItems = [addButton,editButtonItem]
+        } else {
+            navigationItem.rightBarButtonItems = [editButtonItem]
         }
     }
     
     @objc func addProfile() {
         let profileData = NSEntityDescription.insertNewObject(forEntityName: "ProfileData", into: AppDelegate.viewContext) as! ProfileData
         profileData.isMine = true
-        profileData.order = Int16(profileViewControllers.count)
-        profileData.profile = Profile(name: "Xavi Anderhub", ins: ["XaviHub"], sna: ["Xavi-Hub"], pho: ["214-926-7723"])
-        try? AppDelegate.viewContext.save()
+        profileData.order = Int16(profilesData.count)
         profilesData.append(profileData)
-        profileViewControllers.append(MyProfileViewController(profileData: profileData))
         pageControl.numberOfPages += 1
-        setViewControllers([profileViewControllers.last!], direction: .forward, animated: true, completion: nil)
+        setViewControllers([MyProfileViewController(profileData: profileData)], direction: .forward, animated: true, completion: nil)
+        pageControl.currentPage = pageControl.numberOfPages - 1
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let _ = viewController as? MyProfileViewController else { return nil }
-        guard let viewControllerIndex = profileViewControllers.firstIndex(of: viewController as! MyProfileViewController) else {
+        guard let viewController = viewController as? MyProfileViewController else { return nil }
+        guard let viewControllerIndex = profilesData.firstIndex(of: viewController.profileData) else {
             return nil
         }
         
@@ -121,37 +120,46 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
             return nil
         }
         
-        guard profileViewControllers.count > previousIndex else {
+        guard profilesData.count > previousIndex else {
             return nil
         }
         
-        return profileViewControllers[previousIndex]
+        let newVC = MyProfileViewController(profileData: profilesData[previousIndex])
+        newVC.setEditing(isEditing, animated: true)
+        return newVC
 
     }
     
+    
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let _ = viewController as? MyProfileViewController else { return nil }
-        guard let viewControllerIndex = profileViewControllers.firstIndex(of: viewController as! MyProfileViewController) else {
+        guard let viewController = viewController as? MyProfileViewController else { return nil }
+        guard let viewControllerIndex = profilesData.firstIndex(of: viewController.profileData) else {
             return nil
         }
         
         let nextIndex = viewControllerIndex + 1
-        let orderedViewControllersCount = profileViewControllers.count
+        let profilesCount = profilesData.count
         
-        guard orderedViewControllersCount != nextIndex else {
+        guard profilesCount != nextIndex else {
             return nil
         }
         
-        guard orderedViewControllersCount > nextIndex else {
+        guard profilesCount > nextIndex else {
             return nil
         }
-        
-        return profileViewControllers[nextIndex]
+        let newVC = MyProfileViewController(profileData: profilesData[nextIndex])
+        newVC.setEditing(isEditing, animated: true)
+        return newVC
 
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        pendingIndex = profileViewControllers.firstIndex(of: pendingViewControllers.first! as! MyProfileViewController)
+        pendingIndex = profilesData.firstIndex(of: (pendingViewControllers.first! as! MyProfileViewController).profileData)
+        if let pendingVC = pendingViewControllers.first as? MyProfileViewController {
+            if pendingVC.isEditing != isEditing {
+                pendingVC.setEditing(isEditing, animated: true)
+            }
+        }
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
