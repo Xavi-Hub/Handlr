@@ -113,6 +113,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         super.setEditing(editing, animated: animated)
         setupAccounts()
         if editing {
+            tableView.reloadData()
             meView.isHidden = false
             imageView.isHidden = true
             tableView.isHidden = false

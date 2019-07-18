@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 protocol SAccount: Codable {
     var data: String {get set}
@@ -83,6 +84,42 @@ struct Profile: Codable {
             return nil
         }
         
+    }
+    
+    func addToDatabase() {
+        let request: NSFetchRequest<ProfileData> = NSFetchRequest<ProfileData>(entityName: "ProfileData")
+        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        request.sortDescriptors = [sortDescriptor]
+        let predicate = NSPredicate(format: "isMine = %d", false)
+        request.predicate = predicate
+        let profilesData = try? AppDelegate.viewContext.fetch(request)
+        let profileData = NSEntityDescription.insertNewObject(forEntityName: "ProfileData", into: AppDelegate.viewContext) as! ProfileData
+        profileData.isMine = false
+        profileData.name = name
+        profileData.order = Int16(profilesData?.count ?? 0)
+        for anIns in ins {
+            let insData = NSEntityDescription.insertNewObject(forEntityName: "Instagram", into: AppDelegate.viewContext) as! Instagram
+            insData.profileData = profileData
+            insData.data = anIns.value
+            insData.order = anIns.key
+        }
+        for aSna in sna {
+            let snaData = NSEntityDescription.insertNewObject(forEntityName: "Snapchat", into: AppDelegate.viewContext) as! Snapchat
+            snaData.profileData = profileData
+            snaData.data = aSna.value
+            snaData.order = aSna.key
+        }
+        for aPho in pho {
+            let phoData = NSEntityDescription.insertNewObject(forEntityName: "Phone", into: AppDelegate.viewContext) as! Phone
+            phoData.profileData = profileData
+            phoData.data = aPho.value
+            phoData.order = aPho.key
+        }
+        do {
+            try AppDelegate.viewContext.save()
+        } catch {
+            print(error)
+        }
     }
 
 

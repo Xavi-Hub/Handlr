@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import AVFoundation
 
 protocol CardViewDelegate {
@@ -170,30 +171,15 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
-                    notificationGenerator.notificationOccurred(.success)
                     displayingData = true
-//                    let me = Profile.getProfileFromString(string: object.stringValue ?? "")
-//                    var alertString = ""
-//                    var alert = UIAlertController()
-//                    if let me = me {
-//                        for anIns in me.ins {
-//                            alertString.append(contentsOf: "Instagram: " + anIns + "\n")
-//                            scannedAccounts.append(SInstagram(data: anIns))
-//                        }
-//                        for aSna in me.sna {
-//                            alertString.append(contentsOf: "Snapchat: " + aSna + "\n")
-//                            scannedAccounts.append(SSnapchat(data: aSna))
-//                        }
-//                        for aPho in me.pho {
-//                            alertString.append(contentsOf: "Phone: " + aPho + "\n")
-//                            scannedAccounts.append(SPhoneNumber(data: aPho))
-//                        }
-//                        alert = UIAlertController(title: "QR Code", message: alertString, preferredStyle: .alert)
-//                    } else {
-//                        alert = UIAlertController(title: "QR Code", message: "Not Recognized", preferredStyle: .alert)
-//                    }
-//                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    showCard()
+                    if let scannedProfile = Profile.getProfileFromString(string: object.stringValue ?? "") {
+                        notificationGenerator.notificationOccurred(.success)
+                        cardView.setProfile(profile: scannedProfile)
+                        scannedProfile.addToDatabase()                        
+                        showCard()
+                    } else {
+                        notificationGenerator.notificationOccurred(.error)
+                    }
                 }
             }
         }
