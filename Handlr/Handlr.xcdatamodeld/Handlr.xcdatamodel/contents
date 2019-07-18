@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.19" systemVersion="19A501i" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="NO" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.19" systemVersion="19A512f" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="NO" userDefinedModelVersionIdentifier="">
     <entity name="Account" representedClassName="Account" isAbstract="YES" syncable="YES" codeGenerationType="category">
         <attribute name="data" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="profileData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProfileData" inverseName="accounts" inverseEntity="ProfileData"/>
     </entity>
     <entity name="Instagram" representedClassName=".Instagram" parentEntity="Account" syncable="YES" codeGenerationType="category"/>
@@ -14,10 +15,10 @@
     </entity>
     <entity name="Snapchat" representedClassName=".Snapchat" parentEntity="Account" syncable="YES" codeGenerationType="category"/>
     <elements>
-        <element name="ProfileData" positionX="-650.58984375" positionY="80.578125" width="128" height="103"/>
-        <element name="Account" positionX="-447.05859375" positionY="112.71875" width="128" height="73"/>
-        <element name="Snapchat" positionX="-495" positionY="171" width="128" height="43"/>
+        <element name="Account" positionX="-447.05859375" positionY="112.71875" width="128" height="88"/>
         <element name="Instagram" positionX="-549" positionY="126" width="128" height="43"/>
         <element name="Phone" positionX="-540" positionY="135" width="128" height="43"/>
+        <element name="ProfileData" positionX="-650.58984375" positionY="80.578125" width="128" height="103"/>
+        <element name="Snapchat" positionX="-495" positionY="171" width="128" height="43"/>
     </elements>
 </model>

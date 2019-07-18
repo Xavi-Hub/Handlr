@@ -33,6 +33,8 @@ class AddAccountTableViewCell: UITableViewCell {
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        backgroundColor = .clear
+        
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
         

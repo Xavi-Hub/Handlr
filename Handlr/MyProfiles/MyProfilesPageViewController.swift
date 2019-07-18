@@ -17,9 +17,14 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     var pendingIndex: Int?
     var profilesData: [ProfileData]!
     var addButton: UIBarButtonItem! = nil
+    var saveButton = UIBarButtonItem()
+    var cancelButton = UIBarButtonItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveEditing))
+        cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelEditing))
         
         view.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
         
@@ -92,10 +97,26 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         }
         
         if editing {
-            navigationItem.rightBarButtonItems = [addButton,editButtonItem]
+            navigationItem.rightBarButtonItems = [saveButton, addButton]
+            navigationItem.leftBarButtonItem = cancelButton
         } else {
             navigationItem.rightBarButtonItems = [editButtonItem]
+            navigationItem.leftBarButtonItem = nil
         }
+    }
+    
+    @objc func cancelEditing() {
+        AppDelegate.viewContext.rollback()
+        setEditing(false, animated: true)
+    }
+    
+    @objc func saveEditing() {
+        do {
+            try AppDelegate.viewContext.save()
+        } catch {
+            print(error)
+        }
+        setEditing(false, animated: true)
     }
     
     @objc func addProfile() {
@@ -104,7 +125,9 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         profileData.order = Int16(profilesData.count)
         profilesData.append(profileData)
         pageControl.numberOfPages += 1
-        setViewControllers([MyProfileViewController(profileData: profileData)], direction: .forward, animated: true, completion: nil)
+        let newVC = MyProfileViewController(profileData: profileData)
+        newVC.setEditing(isEditing, animated: false)
+        setViewControllers([newVC], direction: .forward, animated: true, completion: nil)
         pageControl.currentPage = pageControl.numberOfPages - 1
     }
     

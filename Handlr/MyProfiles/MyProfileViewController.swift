@@ -62,6 +62,13 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func setupAccounts() {
         accounts = Array(profileData.accounts ?? NSSet()) as! [Account]
+        let request: NSFetchRequest<Account> = NSFetchRequest<Account>(entityName: "Account")
+        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        request.sortDescriptors = [sortDescriptor]
+        let predicate = NSPredicate(format: "profileData = %@", profileData)
+        request.predicate = predicate
+        accounts = (try? AppDelegate.viewContext.fetch(request)) ?? []
+        
     }
     
     
@@ -104,6 +111,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        setupAccounts()
         if editing {
             meView.isHidden = false
             imageView.isHidden = true
@@ -140,6 +148,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         if indexPath.row == profileData.accounts?.count ?? 0 {
             showActionSheet()
         }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     
@@ -147,19 +156,20 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     func showActionSheet() {
         let actionSheet = UIAlertController()
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        var newEntity: Account!
         let ins = UIAlertAction(title: "Instagram", style: .default) { (action) in
-            let anIns = NSEntityDescription.insertNewObject(forEntityName: "Instagram", into: AppDelegate.viewContext) as! Instagram
-            anIns.profileData = self.profileData
+            newEntity = NSEntityDescription.insertNewObject(forEntityName: "Instagram", into: AppDelegate.viewContext) as! Instagram
+            self.setupNewAccount(account: newEntity)
             self.tableView.reloadData()
         }
         let sna = UIAlertAction(title: "Snapchat", style: .default) { (action) in
-            let aSna = NSEntityDescription.insertNewObject(forEntityName: "Snapchat", into: AppDelegate.viewContext) as! Snapchat
-            aSna.profileData = self.profileData
+            newEntity = NSEntityDescription.insertNewObject(forEntityName: "Snapchat", into: AppDelegate.viewContext) as! Snapchat
+            self.setupNewAccount(account: newEntity)
             self.tableView.reloadData()
         }
         let pho = UIAlertAction(title: "Phone Number", style: .default) { (action) in
-            let aPho = NSEntityDescription.insertNewObject(forEntityName: "Phone", into: AppDelegate.viewContext) as! Phone
-            aPho.profileData = self.profileData
+            newEntity = NSEntityDescription.insertNewObject(forEntityName: "Phone", into: AppDelegate.viewContext) as! Phone
+            self.setupNewAccount(account: newEntity)
             self.tableView.reloadData()
         }
         
@@ -170,6 +180,11 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         present(actionSheet, animated: true, completion: nil)
         
+    }
+    
+    func setupNewAccount(account: Account) {
+        account.profileData = self.profileData
+        account.order = Int16(self.accounts.count)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

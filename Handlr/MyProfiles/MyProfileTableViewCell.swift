@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyProfileTableViewCell: UITableViewCell {
+class MyProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     var account: Account!
     
@@ -29,6 +29,7 @@ class MyProfileTableViewCell: UITableViewCell {
         let tf = UITextField()
         tf.font = UIFont.systemFont(ofSize: 18)
         tf.textColor = .white
+        tf.returnKeyType = .done
         return tf
     }()
     
@@ -44,7 +45,7 @@ class MyProfileTableViewCell: UITableViewCell {
     }
     
     func setupViews() {
-        
+        dataField.delegate = self
         dataField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
         
         switch account {
@@ -63,7 +64,7 @@ class MyProfileTableViewCell: UITableViewCell {
         
         dataField.text = account.data
         
-        backgroundColor = .white
+        backgroundColor = .clear
         
         addSubview(accountIcon)
         addSubview(accountTypeLabel)
@@ -91,5 +92,9 @@ class MyProfileTableViewCell: UITableViewCell {
         account.data = textField.text ?? ""
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
 }

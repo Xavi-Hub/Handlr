@@ -11,41 +11,46 @@ import UIKit
 
 protocol SAccount: Codable {
     var data: String {get set}
+    var order: Int16 {get set}
 }
 
 struct SSnapchat: SAccount {
     var data: String
+    var order: Int16
 }
 
 struct SInstagram: SAccount {
     var data: String
+    var order: Int16
 }
 
 struct SFacebook: SAccount {
     var data: String
+    var order: Int16
 }
 
 struct SPhoneNumber: SAccount {
     var data: String
+    var order: Int16
 }
 
 
 struct Profile: Codable {
     let name: String
-    let ins: [String]
-    let sna: [String]
-    let pho: [String]
+    let ins: [Int16:String]
+    let sna: [Int16:String]
+    let pho: [Int16:String]
     
     func getAccounts() -> [SAccount] {
         var accounts = [SAccount]()
         for ins in ins {
-            accounts.append(SInstagram(data: ins))
+            accounts.append(SInstagram(data: ins.value, order: ins.key))
         }
         for sna in sna {
-            accounts.append(SSnapchat(data: sna))
+            accounts.append(SSnapchat(data: sna.value, order: sna.key))
         }
         for pho in pho {
-            accounts.append(SPhoneNumber(data: pho))
+            accounts.append(SPhoneNumber(data: pho.value, order: pho.key))
         }
         return accounts
     }

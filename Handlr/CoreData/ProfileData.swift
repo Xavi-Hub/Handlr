@@ -14,18 +14,18 @@ class ProfileData: NSManagedObject {
     var profile: Profile? {
         get {
             do {
-                var inss = [String]()
-                var snas = [String]()
-                var phos = [String]()
+                var inss = [Int16:String]()
+                var snas = [Int16:String]()
+                var phos = [Int16:String]()
                 for anAcct in Array(accounts ?? NSSet()) {
                     if let anIns = anAcct as? Instagram {
-                        inss.append(anIns.data ?? "")
+                        inss[anIns.order] = anIns.data ?? ""
                     }
                     if let aSna = anAcct as? Snapchat {
-                        snas.append(aSna.data ?? "")
+                        snas[aSna.order] = aSna.data ?? ""
                     }
                     if let aPho = anAcct as? Phone {
-                        phos.append(aPho.data ?? "")
+                        phos[aPho.order] = aPho.data ?? ""
                     }
                 }
                 let profile = Profile(name: name ?? "", ins: inss, sna: snas, pho: phos)

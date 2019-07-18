@@ -9,22 +9,27 @@
 import UIKit
 
 class NoProfilesViewController: UIViewController {
+    
+    let noProfilesLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No Profiles"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 36)
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .blue
+        view.backgroundColor = Colors.mainGray
+        
+        view.addSubview(noProfilesLabel)
+        noProfilesLabel.translatesAutoresizingMaskIntoConstraints = false
+        noProfilesLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        noProfilesLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
