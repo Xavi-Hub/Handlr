@@ -12,23 +12,13 @@ class NewFriendTableViewController: UITableViewController {
 
     let cellID = "friendCell"
     private var profile: Profile?
-    var accounts = [Account]()
+    var accounts = [SAccount]()
     var delegate: CardViewDelegate!
     
     // Fills accounts when profile is set
     func setProfile(profile: Profile) {
         self.profile = profile
         accounts = profile.getAccounts()
-//        accounts = []
-//        for ins in profile.ins {
-//            accounts.append(Instagram(data: ins))
-//        }
-//        for sna in profile.sna {
-//            accounts.append(Snapchat(data: sna))
-//        }
-//        for pho in profile.pho {
-//            accounts.append(PhoneNumber(data: pho))
-//        }
         tableView.reloadData()
     }
     
@@ -39,6 +29,8 @@ class NewFriendTableViewController: UITableViewController {
         view.backgroundColor = .white
 
         tableView.register(NewFriendTableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 400, right: 0)
+        
         
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 30

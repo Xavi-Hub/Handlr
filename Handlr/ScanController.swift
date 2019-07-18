@@ -7,27 +7,8 @@
 //
 
 import UIKit
+import CoreData
 import AVFoundation
-
-protocol Account: Codable {
-    var data: String {get set}
-}
-
-struct Snapchat: Account {
-    var data: String
-}
-
-struct Instagram: Account {
-    var data: String
-}
-
-struct Facebook: Account {
-    var data: String
-}
-
-struct PhoneNumber: Account {
-    var data: String
-}
 
 protocol CardViewDelegate {
     func updateCardPosition(offset: CGFloat)
@@ -100,7 +81,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         cardTopConstraint.isActive = true
         
         cardView.view.frame = CGRect(x: 0, y: view.frame.height-150, width: view.frame.width, height: view.frame.height)
-        cardView.setProfile(profile: Profile(name: "Xavi Anderhub", ins: ["XaviHub18", "OsciHub"], sna: ["XaviHub"], pho: ["214-926-7723"]))
+        cardView.setProfile(profile: Profile(name: "Xavi Anderhub", ins: [0:"OsciHub"], sna: [1:"XaviHub"], pho: [2:"214-926-7723"]))
         cardView.view.clipsToBounds = true
         
         
@@ -115,7 +96,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     
     func releaseCard(velocity: CGFloat) {
         if velocity < -1.0 {
-            cardTopConstraint.constant = 0
+            cardTopConstraint.constant = 50
             displayingData = false
         } else {
             cardTopConstraint.constant = -maxCardHeight
@@ -183,37 +164,22 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     }
 
     var displayingData = false
-    var scannedAccounts: [Account] = []
+    var scannedAccounts: [SAccount] = []
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if displayingData {return}
         if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
-                    notificationGenerator.notificationOccurred(.success)
                     displayingData = true
-                    let me = Profile.getProfileFromString(string: object.stringValue ?? "")
-                    var alertString = ""
-                    var alert = UIAlertController()
-                    if let me = me {
-                        for anIns in me.ins {
-                            alertString.append(contentsOf: "Instagram: " + anIns + "\n")
-                            scannedAccounts.append(Instagram(data: anIns))
-                        }
-                        for aSna in me.sna {
-                            alertString.append(contentsOf: "Snapchat: " + aSna + "\n")
-                            scannedAccounts.append(Snapchat(data: aSna))
-                        }
-                        for aPho in me.pho {
-                            alertString.append(contentsOf: "Phone: " + aPho + "\n")
-                            scannedAccounts.append(PhoneNumber(data: aPho))
-                        }
-                        alert = UIAlertController(title: "QR Code", message: alertString, preferredStyle: .alert)
+                    if let scannedProfile = Profile.getProfileFromString(string: object.stringValue ?? "") {
+                        notificationGenerator.notificationOccurred(.success)
+                        cardView.setProfile(profile: scannedProfile)
+                        scannedProfile.addToDatabase()                        
+                        showCard()
                     } else {
-                        alert = UIAlertController(title: "QR Code", message: "Not Recognized", preferredStyle: .alert)
+                        notificationGenerator.notificationOccurred(.error)
                     }
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    showCard()
                 }
             }
         }
