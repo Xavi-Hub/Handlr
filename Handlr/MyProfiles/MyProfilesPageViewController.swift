@@ -124,6 +124,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         let profileData = NSEntityDescription.insertNewObject(forEntityName: "ProfileData", into: AppDelegate.viewContext) as! ProfileData
         profileData.isMine = true
         profileData.order = Int16(profilesData.count)
+        profileData.creationDate = Date()
         profilesData.append(profileData)
         pageControl.numberOfPages += 1
         let newVC = MyProfileViewController(profileData: profileData)

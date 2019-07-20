@@ -71,9 +71,10 @@ class NewFriendTableViewController: UITableViewController {
 
 
     var wasScrollingAtTop = false
+    var isDragging = false
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= 0 || delegate.totalOffset() > delegate.maxOffset() {
+        if (scrollView.contentOffset.y <= 0 || delegate.totalOffset() > delegate.maxOffset()) && isDragging {
             wasScrollingAtTop = true
             delegate.updateCardPosition(offset: -scrollView.contentOffset.y)
             // maxOffset is actually min offset since it's negative
@@ -83,7 +84,12 @@ class NewFriendTableViewController: UITableViewController {
         }
     }
     
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isDragging = true
+    }
+    
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        isDragging = false
         if wasScrollingAtTop {
             delegate.releaseCard(velocity: velocity.y)
             wasScrollingAtTop = false
