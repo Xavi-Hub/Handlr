@@ -16,6 +16,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     let tableView = UITableView()
     let acctCell = "acctCell"
     let addCell = "addCell"
+    let headerCell = "headerCell"
     
     var accounts = [Account]()
     
@@ -74,6 +75,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     func setupViews() {
         tableView.register(MyProfileTableViewCell.self, forCellReuseIdentifier: acctCell)
         tableView.register(AddAccountTableViewCell.self, forCellReuseIdentifier: addCell)
+        tableView.register(MyProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerCell)
         tableView.backgroundColor = Colors.mainGray
         tableView.delegate = self
         tableView.dataSource = self
@@ -151,7 +153,16 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerCell) as! MyProfileHeaderView
+        header.profileData = profileData
+        header.setupViews()
+        return header
+    }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat(50)
+    }
     
     func showActionSheet() {
         let actionSheet = UIAlertController()

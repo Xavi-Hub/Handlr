@@ -104,9 +104,9 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
             }
             pageControl.currentPage = currentIndex ?? 0
             if profilesData.count > 0 {
-                setViewControllers([MyProfileViewController(profileData: profilesData[currentIndex ?? 0])], direction: .reverse, animated: true, completion: nil)
+                setViewControllers([MyProfileViewController(profileData: profilesData[currentIndex ?? 0])], direction: .reverse, animated: false, completion: nil)
             } else {
-                setViewControllers([NoProfilesViewController()], direction: .reverse, animated: true, completion: nil)
+                setViewControllers([NoProfilesViewController()], direction: .reverse, animated: false, completion: nil)
             }
             navigationItem.rightBarButtonItems = [editButtonItem]
             navigationItem.leftBarButtonItem = nil

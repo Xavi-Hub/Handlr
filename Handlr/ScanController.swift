@@ -22,6 +22,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     var video = AVCaptureVideoPreviewLayer()
     let notificationGenerator = UINotificationFeedbackGenerator()
     let touchView = UIView()
+    var isShowing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +41,14 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         setupTouchView()
         setupTouchRecognizer()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        isShowing = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        isShowing = false
     }
     
     func setupTouchRecognizer() {
@@ -172,7 +181,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     var scannedAccounts: [SAccount] = []
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        if displayingData {return}
+        if displayingData || !isShowing {return}
         if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
