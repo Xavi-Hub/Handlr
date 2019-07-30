@@ -61,7 +61,6 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func setupAccounts() {
-        accounts = Array(profileData.accounts ?? NSSet()) as! [Account]
         let request: NSFetchRequest<Account> = NSFetchRequest<Account>(entityName: "Account")
         let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
         request.sortDescriptors = [sortDescriptor]

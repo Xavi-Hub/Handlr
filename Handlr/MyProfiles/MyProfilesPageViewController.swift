@@ -92,18 +92,31 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        if let profileVC = viewControllers![0] as? MyProfileViewController {
-            profileVC.setEditing(editing, animated: animated)
-        }
         
         if editing {
             navigationItem.rightBarButtonItems = [saveButton, addButton]
             navigationItem.leftBarButtonItem = cancelButton
         } else {
+            fetchData()
+            pageControl.numberOfPages = profilesData.count
+            if currentIndex ?? 0 > profilesData.count - 1 {
+                currentIndex = (profilesData.count - 1) < 0 ? 0 : profilesData.count - 1
+            }
+            pageControl.currentPage = currentIndex ?? 0
+            if profilesData.count > 0 {
+                setViewControllers([MyProfileViewController(profileData: profilesData[currentIndex ?? 0])], direction: .reverse, animated: true, completion: nil)
+            } else {
+                setViewControllers([NoProfilesViewController()], direction: .reverse, animated: true, completion: nil)
+            }
             navigationItem.rightBarButtonItems = [editButtonItem]
             navigationItem.leftBarButtonItem = nil
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
         }
+        
+        if let profileVC = viewControllers![0] as? MyProfileViewController {
+            profileVC.setEditing(editing, animated: animated)
+        }
+
     }
     
     @objc func cancelEditing() {
@@ -131,6 +144,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         newVC.setEditing(isEditing, animated: false)
         setViewControllers([newVC], direction: .forward, animated: true, completion: nil)
         pageControl.currentPage = pageControl.numberOfPages - 1
+        currentIndex = pageControl.numberOfPages - 1
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
