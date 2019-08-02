@@ -99,6 +99,21 @@ class NewFriendTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if let sna = accounts[indexPath.row] as? SSnapchat {
+            if let url = URL(string: "snapchat://add/" + sna.data) {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        }
+        if let ins = accounts[indexPath.row] as? SInstagram {
+            if let url = URL(string: "instagram://user?username=" + ins.data) {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        }
+
     }
     
 }
