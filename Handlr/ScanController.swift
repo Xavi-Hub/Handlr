@@ -22,6 +22,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     var video = AVCaptureVideoPreviewLayer()
     let notificationGenerator = UINotificationFeedbackGenerator()
     let touchView = UIView()
+    var isShowing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,12 +34,21 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         navigationController?.navigationBar.tintColor = .white
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Me", style: .plain, target: self, action: #selector(showMeView))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Friends", style: .plain, target: self, action: #selector(showFriendsView))
 
         startCapturing()
         setupCard()
         setupTouchView()
         setupTouchRecognizer()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        isShowing = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        isShowing = false
     }
     
     func setupTouchRecognizer() {
@@ -62,6 +72,10 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         navigationController?.pushViewController(MyProfilesPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil), animated: true)
     }
     
+    @objc func showFriendsView() {
+        navigationController?.pushViewController(FriendsTableViewController(), animated: true)
+    }
+    
     let cardView = NewFriendTableViewController()
     var cardTopConstraint: NSLayoutConstraint!
     let maxCardHeight: CGFloat = 500.0
@@ -81,7 +95,6 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         cardTopConstraint.isActive = true
         
         cardView.view.frame = CGRect(x: 0, y: view.frame.height-150, width: view.frame.width, height: view.frame.height)
-        cardView.setProfile(profile: Profile(name: "Xavi Anderhub", ins: [0:"OsciHub"], sna: [1:"XaviHub"], pho: [2:"214-926-7723"]))
         cardView.view.clipsToBounds = true
         
         
@@ -117,7 +130,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     
     @objc func dismissCard(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
-            cardTopConstraint.constant = 0
+            cardTopConstraint.constant = 50
             displayingData = false
             UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
                 self.view.layoutIfNeeded()
@@ -128,6 +141,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     }
     
     func showCard() {
+        displayingData = true
         cardView.view.isHidden = false
         cardTopConstraint.constant = -maxCardHeight
         UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: UIView.AnimationOptions.curveEaseInOut, animations: {
@@ -167,11 +181,10 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     var scannedAccounts: [SAccount] = []
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        if displayingData {return}
+        if displayingData || !isShowing {return}
         if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
-                    displayingData = true
                     if let scannedProfile = Profile.getProfileFromString(string: object.stringValue ?? "") {
                         notificationGenerator.notificationOccurred(.success)
                         cardView.setProfile(profile: scannedProfile)

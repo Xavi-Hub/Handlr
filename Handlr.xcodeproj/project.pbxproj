@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F06490F22F0D6E000A4BFF6 /* MyProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F06490E22F0D6E000A4BFF6 /* MyProfileHeaderView.swift */; };
 		5F1F429722D807AB002D7847 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1F429622D807AB002D7847 /* Colors.swift */; };
 		5F2E8EEB22CAD83B00B0D8AB /* ProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2E8EEA22CAD83B00B0D8AB /* ProfileData.swift */; };
 		5F2E8EED22CAD9B800B0D8AB /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2E8EEC22CAD9B800B0D8AB /* Profile.swift */; };
@@ -16,6 +17,8 @@
 		5F80FC6922CAB8780023F54F /* MyProfilesPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F80FC6822CAB8780023F54F /* MyProfilesPageViewController.swift */; };
 		5F80FC6B22CAB9590023F54F /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F80FC6A22CAB9590023F54F /* MyProfileViewController.swift */; };
 		5FDCA3C522CC167D00E6B529 /* NoProfilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDCA3C422CC167D00E6B529 /* NoProfilesViewController.swift */; };
+		5FEDF36622E2569B00B3D877 /* FriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEDF36522E2569B00B3D877 /* FriendsTableViewController.swift */; };
+		5FEDF36822E256C100B3D877 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEDF36722E256C100B3D877 /* FriendsTableViewCell.swift */; };
 		5FF14C4F22DE5D95003CF8BB /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF14C4E22DE5D95003CF8BB /* Account.swift */; };
 		5FF14C5122DE5DEB003CF8BB /* Snapchat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF14C5022DE5DEB003CF8BB /* Snapchat.swift */; };
 		5FF14C5322DE5DFB003CF8BB /* Phone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF14C5222DE5DFB003CF8BB /* Phone.swift */; };
@@ -48,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F06490E22F0D6E000A4BFF6 /* MyProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MyProfileHeaderView.swift; path = "../../../../../../../../../../System/Volumes/Data/Users/xavihub/Documents/Xcode/Projects/Handlr/App Code/Handlr/Handlr/MyProfiles/MyProfileHeaderView.swift"; sourceTree = "<group>"; };
 		5F1F429622D807AB002D7847 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		5F2E8EEA22CAD83B00B0D8AB /* ProfileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileData.swift; sourceTree = "<group>"; };
 		5F2E8EEC22CAD9B800B0D8AB /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
@@ -57,6 +61,8 @@
 		5F80FC6822CAB8780023F54F /* MyProfilesPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfilesPageViewController.swift; sourceTree = "<group>"; };
 		5F80FC6A22CAB9590023F54F /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		5FDCA3C422CC167D00E6B529 /* NoProfilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProfilesViewController.swift; sourceTree = "<group>"; };
+		5FEDF36522E2569B00B3D877 /* FriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsTableViewController.swift; path = "../../../../../../../../../../System/Volumes/Data/Users/xavihub/Documents/Xcode/Projects/Handlr/App Code/Handlr/Handlr/FriendProfiles/FriendsTableViewController.swift"; sourceTree = "<group>"; };
+		5FEDF36722E256C100B3D877 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsTableViewCell.swift; path = "../../../../../../../../../../System/Volumes/Data/Users/xavihub/Documents/Xcode/Projects/Handlr/App Code/Handlr/Handlr/FriendProfiles/FriendsTableViewCell.swift"; sourceTree = "<group>"; };
 		5FF14C4E22DE5D95003CF8BB /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		5FF14C5022DE5DEB003CF8BB /* Snapchat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapchat.swift; sourceTree = "<group>"; };
 		5FF14C5222DE5DFB003CF8BB /* Phone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone.swift; sourceTree = "<group>"; };
@@ -118,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				5F80FC6A22CAB9590023F54F /* MyProfileViewController.swift */,
+				5F06490E22F0D6E000A4BFF6 /* MyProfileHeaderView.swift */,
 				5F80FC6622CAB66F0023F54F /* MyProfileTableViewCell.swift */,
 				5FF14C5622DE86E6003CF8BB /* AddAccountTableViewCell.swift */,
 				5F80FC6822CAB8780023F54F /* MyProfilesPageViewController.swift */,
@@ -133,6 +140,15 @@
 				5F3B7D0E22C2D18F00D2A0CC /* NewFriendTableViewCell.swift */,
 			);
 			path = NewFriend;
+			sourceTree = "<group>";
+		};
+		5FEDF36422E2567A00B3D877 /* FriendProfiles */ = {
+			isa = PBXGroup;
+			children = (
+				5FEDF36522E2569B00B3D877 /* FriendsTableViewController.swift */,
+				5FEDF36722E256C100B3D877 /* FriendsTableViewCell.swift */,
+			);
+			path = FriendProfiles;
 			sourceTree = "<group>";
 		};
 		5FF82078217C040900130CD0 = {
@@ -158,6 +174,7 @@
 		5FF82083217C040900130CD0 /* Handlr */ = {
 			isa = PBXGroup;
 			children = (
+				5FEDF36422E2567A00B3D877 /* FriendProfiles */,
 				5F2E8EE522CACE2A00B0D8AB /* CoreData */,
 				5F80FC6D22CAB9680023F54F /* NewFriend */,
 				5F80FC6C22CAB95D0023F54F /* MyProfiles */,
@@ -326,11 +343,14 @@
 			files = (
 				5FF14C5522DE5E0E003CF8BB /* Instagram.swift in Sources */,
 				5F80FC6B22CAB9590023F54F /* MyProfileViewController.swift in Sources */,
+				5FEDF36622E2569B00B3D877 /* FriendsTableViewController.swift in Sources */,
 				5FF14C4F22DE5D95003CF8BB /* Account.swift in Sources */,
 				5F1F429722D807AB002D7847 /* Colors.swift in Sources */,
 				5FF14C5122DE5DEB003CF8BB /* Snapchat.swift in Sources */,
 				5F2E8EED22CAD9B800B0D8AB /* Profile.swift in Sources */,
+				5F06490F22F0D6E000A4BFF6 /* MyProfileHeaderView.swift in Sources */,
 				5F80FC6922CAB8780023F54F /* MyProfilesPageViewController.swift in Sources */,
+				5FEDF36822E256C100B3D877 /* FriendsTableViewCell.swift in Sources */,
 				5F2E8EEB22CAD83B00B0D8AB /* ProfileData.swift in Sources */,
 				5FF82087217C040900130CD0 /* ScanController.swift in Sources */,
 				5F3B7D0D22C2CCC800D2A0CC /* NewFriendTableViewController.swift in Sources */,

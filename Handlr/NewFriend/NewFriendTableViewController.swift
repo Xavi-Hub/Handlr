@@ -71,9 +71,10 @@ class NewFriendTableViewController: UITableViewController {
 
 
     var wasScrollingAtTop = false
+    var isDragging = false
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= 0 || delegate.totalOffset() > delegate.maxOffset() {
+        if (scrollView.contentOffset.y <= 0 || delegate.totalOffset() > delegate.maxOffset()) && isDragging {
             wasScrollingAtTop = true
             delegate.updateCardPosition(offset: -scrollView.contentOffset.y)
             // maxOffset is actually min offset since it's negative
@@ -83,7 +84,12 @@ class NewFriendTableViewController: UITableViewController {
         }
     }
     
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isDragging = true
+    }
+    
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        isDragging = false
         if wasScrollingAtTop {
             delegate.releaseCard(velocity: velocity.y)
             wasScrollingAtTop = false
@@ -93,6 +99,21 @@ class NewFriendTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if let sna = accounts[indexPath.row] as? SSnapchat {
+            if let url = URL(string: "snapchat://add/" + sna.data) {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        }
+        if let ins = accounts[indexPath.row] as? SInstagram {
+            if let url = URL(string: "instagram://user?username=" + ins.data) {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        }
+
     }
     
 }
