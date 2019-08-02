@@ -12,25 +12,32 @@ class MyProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     var account: Account!
     
-    var accountIcon: UIImageView = {
-        let iv = UIImageView(image: UIImage(named: "snapchat"))
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    
     let accountTypeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.textColor = .black
+        label.numberOfLines = 2
         return label
     }()
     
     let dataField: UITextField = {
         let tf = UITextField()
-        tf.font = UIFont.systemFont(ofSize: 18)
-        tf.textColor = .white
+        tf.font = UIFont.systemFont(ofSize: 15)
         tf.returnKeyType = .done
+        tf.textColor = .black
         return tf
+    }()
+    
+    let dividerLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1.0)
+        return view
+    }()
+    
+    let iconImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        return iv
     }()
     
     override func awakeFromNib() {
@@ -50,42 +57,52 @@ class MyProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
         
         switch account {
         case is Snapchat:
-            accountIcon.image = UIImage(named: "snapchat")
             accountTypeLabel.text = "Snapchat"
+            dataField.placeholder = "Snapchat"
+            iconImageView.image = UIImage(named: "snapchat")
         case is Instagram:
-            accountIcon.image = UIImage(named: "instagram")
             accountTypeLabel.text = "Instagram"
+            dataField.placeholder = "Instagram"
+            iconImageView.image = UIImage(named: "instagram")
         case is Phone:
-            accountIcon.image = UIImage(named: "phone")
-            accountTypeLabel.text = "Phone"
+            accountTypeLabel.text = "Phone Number"
+            dataField.placeholder = "Phone Number"
+            iconImageView.image = UIImage(named: "phone")
         default:
-            accountIcon.image = UIImage()
+            accountTypeLabel.text = ""
         }
         
         dataField.text = account.data
         
-        backgroundColor = .clear
+        backgroundColor = .white
         
-        addSubview(accountIcon)
-        addSubview(accountTypeLabel)
+//        addSubview(accountTypeLabel)
+        addSubview(iconImageView)
         addSubview(dataField)
-        accountIcon.translatesAutoresizingMaskIntoConstraints = false
-        accountTypeLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(dividerLine)
+//        accountTypeLabel.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
         dataField.translatesAutoresizingMaskIntoConstraints = false
+        dividerLine.translatesAutoresizingMaskIntoConstraints = false
         
-        accountIcon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        accountIcon.leftAnchor.constraint(equalTo: leftAnchor, constant: 50).isActive = true
-        accountIcon.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8).isActive = true
-        accountIcon.widthAnchor.constraint(equalTo: accountIcon.heightAnchor).isActive = true
         
-        accountTypeLabel.leftAnchor.constraint(equalTo: accountIcon.rightAnchor, constant: 50).isActive = true
-        accountTypeLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-        accountTypeLabel.bottomAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        accountTypeLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+//        accountTypeLabel.rightAnchor.constraint(equalTo: leftAnchor, constant: 100).isActive = true
+//        accountTypeLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        dataField.leftAnchor.constraint(equalTo: accountTypeLabel.leftAnchor).isActive = true
-        dataField.rightAnchor.constraint(equalTo: accountTypeLabel.rightAnchor).isActive = true
-        dataField.topAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        iconImageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        iconImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        iconImageView.heightAnchor.constraint(equalTo: iconImageView.widthAnchor).isActive = true
         
+        dataField.leftAnchor.constraint(equalTo: iconImageView.rightAnchor, constant: 20).isActive = true
+        dataField.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        dataField.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        dividerLine.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        dividerLine.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        dividerLine.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        dividerLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
     @objc func textFieldDidChange(textField: UITextField) {

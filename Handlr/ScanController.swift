@@ -31,7 +31,6 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.view.backgroundColor = UIColor.clear
-        navigationController?.navigationBar.tintColor = .white
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Me", style: .plain, target: self, action: #selector(showMeView))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Friends", style: .plain, target: self, action: #selector(showFriendsView))
@@ -45,10 +44,19 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     
     override func viewWillAppear(_ animated: Bool) {
         isShowing = true
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.view.backgroundColor = UIColor.clear
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         isShowing = false
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.view.backgroundColor = UIColor.white
     }
     
     func setupTouchRecognizer() {

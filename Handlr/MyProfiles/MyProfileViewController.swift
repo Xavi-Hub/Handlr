@@ -13,12 +13,16 @@ import CoreData
 class MyProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var profileData: ProfileData!
-    let tableView = UITableView()
+    let tableView = UITableView(frame: CGRect.zero, style: .grouped)
     let acctCell = "acctCell"
     let addCell = "addCell"
     let headerCell = "headerCell"
+    var accountHeader = "accountHeader"
     
-    var accounts = [Account]()
+    var accounts = [[Account]]()
+    var inss = [Instagram]()
+    var snas = [Snapchat]()
+    var phos = [Phone]()
     
     init(profileData: ProfileData) {
         super.init(nibName: nil, bundle: nil)
@@ -47,7 +51,6 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     var imageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .red
         return iv
     }()
     
@@ -62,12 +65,22 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func setupAccounts() {
-        let request: NSFetchRequest<Account> = NSFetchRequest<Account>(entityName: "Account")
+        let insRequest: NSFetchRequest<Instagram> = NSFetchRequest<Instagram>(entityName: "Instagram")
         let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
-        request.sortDescriptors = [sortDescriptor]
+        insRequest.sortDescriptors = [sortDescriptor]
         let predicate = NSPredicate(format: "profileData = %@", profileData)
-        request.predicate = predicate
-        accounts = (try? AppDelegate.viewContext.fetch(request)) ?? []
+        insRequest.predicate = predicate
+        inss = (try? AppDelegate.viewContext.fetch(insRequest)) ?? []
+        let snaRequest: NSFetchRequest<Snapchat> = NSFetchRequest<Snapchat>(entityName: "Snapchat")
+        snaRequest.sortDescriptors = [sortDescriptor]
+        snaRequest.predicate = predicate
+        snas = (try? AppDelegate.viewContext.fetch(snaRequest)) ?? []
+        let phoRequest: NSFetchRequest<Phone> = NSFetchRequest<Phone>(entityName: "Phone")
+        phoRequest.sortDescriptors = [sortDescriptor]
+        phoRequest.predicate = predicate
+        phos = (try? AppDelegate.viewContext.fetch(phoRequest)) ?? []
+
+        accounts = [inss, snas, phos]
         
     }
     
@@ -76,9 +89,11 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.register(MyProfileTableViewCell.self, forCellReuseIdentifier: acctCell)
         tableView.register(AddAccountTableViewCell.self, forCellReuseIdentifier: addCell)
         tableView.register(MyProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerCell)
-        tableView.backgroundColor = Colors.mainGray
+        tableView.register(AccountTypeHeader.self, forHeaderFooterViewReuseIdentifier: accountHeader)
+        tableView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 247/255, alpha: 1.0)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
         
         view.addSubview(meView)
         view.addSubview(imageView)
@@ -126,43 +141,77 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // +1 for name header
+        setupAccounts()
+        return accounts.count + 1
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // 1 for adding cell
         setupAccounts()
-        return (profileData.accounts?.count ?? 0) + 1
+        // -1 because there is an extra header at top for name
+        if section == 0 {
+            return 0
+        }
+        // +1 for add account cell
+        return accounts[section-1].count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == profileData.accounts?.count ?? 0 {
+        if indexPath.row >= accounts[indexPath.section - 1].count {
             let cell = tableView.dequeueReusableCell(withIdentifier: addCell) as! AddAccountTableViewCell
             cell.setupViews()
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: acctCell) as! MyProfileTableViewCell
-            cell.account = accounts[indexPath.row]
+            // -1 because name header
+            cell.account = accounts[indexPath.section-1][indexPath.row]
             cell.setupViews()
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == profileData.accounts?.count ?? 0 {
+        // -1 for name header
+        if indexPath.row == accounts[indexPath.section-1].count{
             showActionSheet()
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerCell) as! MyProfileHeaderView
-        header.profileData = profileData
-        header.setupViews()
-        return header
+        if section == 0 {
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerCell) as! MyProfileHeaderView
+            header.profileData = profileData
+            header.setupViews()
+            return header
+        } else {
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: accountHeader) as! AccountTypeHeader
+            if section == 1 {
+                header.accountType = .instagram
+            } else if section == 2 {
+                header.accountType = .snapchat
+            } else if section == 3 {
+                header.accountType = .phone
+            }
+            header.setupViews()
+            return header
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(44)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat(50)
+        if section == 0 {
+            return CGFloat(50)
+        } else {
+            return CGFloat(30)
+        }
     }
+    
     
     func showActionSheet() {
         let actionSheet = UIAlertController()
@@ -198,9 +247,6 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         account.order = Int16(self.accounts.count)
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return CGFloat(75.0)
-    }
     
 
 }

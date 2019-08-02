@@ -21,7 +21,6 @@ class NoProfilesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = Colors.mainGray
         
         view.addSubview(noProfilesLabel)
         noProfilesLabel.translatesAutoresizingMaskIntoConstraints = false

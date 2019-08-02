@@ -26,7 +26,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
         saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveEditing))
         cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelEditing))
         
-        view.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
+        view.backgroundColor = UIColor.white
         
         dataSource = self
         delegate = self
@@ -41,6 +41,7 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         fetchData()
         
         if profilesData.isEmpty {

@@ -12,8 +12,8 @@ class AddAccountTableViewCell: UITableViewCell {
     
     var label: UILabel = {
         let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.textColor = UIColor(red: 67/255, green: 121/255, blue: 238/255, alpha: 1.0)
+        label.font = UIFont.systemFont(ofSize: 15)
         label.text = "+ Add Account..."
         return label
     }()
@@ -33,10 +33,10 @@ class AddAccountTableViewCell: UITableViewCell {
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         
-        backgroundColor = .clear
+        backgroundColor = .white
         
-        label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        label.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
+        label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         
         
     }
