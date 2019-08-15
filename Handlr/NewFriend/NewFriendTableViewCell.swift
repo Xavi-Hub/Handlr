@@ -72,7 +72,7 @@ class NewFriendTableViewCell: UITableViewCell {
         
         accountIcon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         accountIcon.leftAnchor.constraint(equalTo: leftAnchor, constant: 50).isActive = true
-        accountIcon.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8).isActive = true
+        accountIcon.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7).isActive = true
         accountIcon.widthAnchor.constraint(equalTo: accountIcon.heightAnchor).isActive = true
         
         accountTypeLabel.leftAnchor.constraint(equalTo: accountIcon.rightAnchor, constant: 50).isActive = true

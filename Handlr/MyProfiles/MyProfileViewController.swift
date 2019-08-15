@@ -90,7 +90,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.register(AddAccountTableViewCell.self, forCellReuseIdentifier: addCell)
         tableView.register(MyProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerCell)
         tableView.register(AccountTypeHeader.self, forHeaderFooterViewReuseIdentifier: accountHeader)
-        tableView.backgroundColor = UIColor(red: 242/255, green: 242/255, blue: 247/255, alpha: 1.0)
+        tableView.backgroundColor = Colors.settingsGray
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
