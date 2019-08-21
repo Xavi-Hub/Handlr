@@ -18,6 +18,7 @@
 		5F80FC6922CAB8780023F54F /* MyProfilesPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F80FC6822CAB8780023F54F /* MyProfilesPageViewController.swift */; };
 		5F80FC6B22CAB9590023F54F /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F80FC6A22CAB9590023F54F /* MyProfileViewController.swift */; };
 		5F9075B5230DEA8700880281 /* MyProfilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9075B4230DEA8700880281 /* MyProfilesTableViewController.swift */; };
+		5F9075B8230DEBC000880281 /* MyProfilesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9075B7230DEBC000880281 /* MyProfilesTableViewCell.swift */; };
 		5FDCA3C522CC167D00E6B529 /* NoProfilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDCA3C422CC167D00E6B529 /* NoProfilesViewController.swift */; };
 		5FEDF36622E2569B00B3D877 /* FriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEDF36522E2569B00B3D877 /* FriendsTableViewController.swift */; };
 		5FEDF36822E256C100B3D877 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEDF36722E256C100B3D877 /* FriendsTableViewCell.swift */; };
@@ -64,6 +65,7 @@
 		5F80FC6822CAB8780023F54F /* MyProfilesPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfilesPageViewController.swift; sourceTree = "<group>"; };
 		5F80FC6A22CAB9590023F54F /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		5F9075B4230DEA8700880281 /* MyProfilesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfilesTableViewController.swift; sourceTree = "<group>"; };
+		5F9075B7230DEBC000880281 /* MyProfilesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfilesTableViewCell.swift; sourceTree = "<group>"; };
 		5FDCA3C422CC167D00E6B529 /* NoProfilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProfilesViewController.swift; sourceTree = "<group>"; };
 		5FEDF36522E2569B00B3D877 /* FriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsTableViewController.swift; path = "../../../../../../../../../../System/Volumes/Data/Users/xavihub/Documents/Xcode/Projects/Handlr/App Code/Handlr/Handlr/FriendProfiles/FriendsTableViewController.swift"; sourceTree = "<group>"; };
 		5FEDF36722E256C100B3D877 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendsTableViewCell.swift; path = "../../../../../../../../../../System/Volumes/Data/Users/xavihub/Documents/Xcode/Projects/Handlr/App Code/Handlr/Handlr/FriendProfiles/FriendsTableViewCell.swift"; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 			children = (
 				5F80FC6A22CAB9590023F54F /* MyProfileViewController.swift */,
 				5F9075B4230DEA8700880281 /* MyProfilesTableViewController.swift */,
+				5F9075B7230DEBC000880281 /* MyProfilesTableViewCell.swift */,
 				5F06490E22F0D6E000A4BFF6 /* MyProfileHeaderView.swift */,
 				5F525C2022F4EE35003602DA /* AccountTypeHeader.swift */,
 				5F80FC6622CAB66F0023F54F /* MyProfileTableViewCell.swift */,
@@ -359,6 +362,7 @@
 				5F80FC6922CAB8780023F54F /* MyProfilesPageViewController.swift in Sources */,
 				5FEDF36822E256C100B3D877 /* FriendsTableViewCell.swift in Sources */,
 				5F2E8EEB22CAD83B00B0D8AB /* ProfileData.swift in Sources */,
+				5F9075B8230DEBC000880281 /* MyProfilesTableViewCell.swift in Sources */,
 				5FF82087217C040900130CD0 /* ScanController.swift in Sources */,
 				5F9075B5230DEA8700880281 /* MyProfilesTableViewController.swift in Sources */,
 				5F3B7D0D22C2CCC800D2A0CC /* NewFriendTableViewController.swift in Sources */,

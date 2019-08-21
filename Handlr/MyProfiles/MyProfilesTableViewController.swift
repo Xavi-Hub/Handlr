@@ -12,6 +12,8 @@ class MyProfilesTableViewController: UITableViewController {
     
     var profilesData = [ProfileData]()
     var currentProfile: ProfileData!
+    let cellID = "profilesCell"
+    var delegate: CardViewDelegate!
     
     init(currentProfile: ProfileData) {
         super.init(nibName: nil, bundle: nil)
@@ -24,8 +26,17 @@ class MyProfilesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
+        tableView.register(MyProfilesTableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.backgroundColor = .white
+        
+        view.layer.cornerRadius = 30
+        view.layer.masksToBounds = true
+        
+        
     }
+    
 
     // MARK: - Table view data source
 
@@ -37,59 +48,38 @@ class MyProfilesTableViewController: UITableViewController {
         return profilesData.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! MyProfilesTableViewCell
+        cell.profile = profilesData[indexPath.row]
+        cell.setupViews()
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    var wasScrollingAtTop = false
+    var isDragging = false
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y <= 0 || delegate.totalOffset() > delegate.maxOffset()) && isDragging {
+            wasScrollingAtTop = true
+            delegate.updateCardPosition(offset: -scrollView.contentOffset.y)
+            // maxOffset is actually min offset since it's negative
+            if delegate.totalOffset() > delegate.maxOffset() {
+                scrollView.contentOffset.y = 0
+            }
+        }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isDragging = true
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        isDragging = false
+        if wasScrollingAtTop {
+            delegate.releaseCard(velocity: velocity.y)
+            wasScrollingAtTop = false
+        }
     }
-    */
 
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 
-class MyProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MyProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CardViewDelegate {
 
     var profileData: ProfileData!
     let tableView = UITableView(frame: CGRect.zero, style: .grouped)
@@ -19,6 +19,9 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     let headerCell = "headerCell"
     var accountHeader = "accountHeader"
     var profileButton = UIButton(type: .system)
+    var cardView: MyProfilesTableViewController!
+    var displayingData = false
+    let shadowView = UIView()
     
     var accounts = [[Account]]()
     var inss = [Instagram]()
@@ -66,6 +69,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
     
     }
+    
     
     func setupAccounts() {
         let insRequest: NSFetchRequest<Instagram> = NSFetchRequest<Instagram>(entityName: "Instagram")
@@ -128,18 +132,42 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         setEditing(isEditing, animated: true)
         
+        setupShadowView()
+        setupCard()
+        setupTouchRecognizer()
         setupNavBar()
         
     }
     
+    func setupShadowView() {
+        shadowView.backgroundColor = UIColor(white: 0.0, alpha: 0.2)
+        shadowView.isUserInteractionEnabled = true
+        shadowView.layer.opacity = 0.0
+        shadowView.isHidden = true
+        view.addSubview(shadowView)
+        shadowView.translatesAutoresizingMaskIntoConstraints = false
+        shadowView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        shadowView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        shadowView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        shadowView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    }
+    
+    func setupTouchRecognizer() {
+        let longGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(dismissCard(gesture:)))
+        longGestureRecognizer.cancelsTouchesInView = true
+        longGestureRecognizer.minimumPressDuration = 0
+        shadowView.addGestureRecognizer(longGestureRecognizer)
+    }
+
+    
     func setupNavBar() {
         let navView = UIStackView()
-        let downArrowView = UIImageView(image: UIImage(named: "snapchat"))
+        let downArrowView = UIImageView(image: UIImage(named: "downArrow"))
         downArrowView.translatesAutoresizingMaskIntoConstraints = false
         profileButton.setTitle("Hello", for: .normal)
-        profileButton.tintColor = .white
+        profileButton.tintColor = .black
         profileButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        profileButton.addTarget(self, action: #selector(showProfiles), for: .touchUpInside)
+        profileButton.addTarget(self, action: #selector(showCard), for: .touchUpInside)
         navView.addArrangedSubview(profileButton)
         navView.addArrangedSubview(downArrowView)
         navView.axis = .horizontal
@@ -149,7 +177,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         downArrowView.heightAnchor.constraint(equalToConstant: 18).isActive = true
         downArrowView.widthAnchor.constraint(equalTo: downArrowView.heightAnchor).isActive = true
 
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.tintColor = .black
         navigationItem.titleView = navView
     }
 
@@ -169,9 +197,108 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
 
     }
     
-    @objc func showProfiles() {
-        fetchProfiles()
+    var cardTopConstraint: NSLayoutConstraint!
+    let maxCardHeight: CGFloat = 500.0
+    func setupCard() {
+        
+        cardView = MyProfilesTableViewController(currentProfile: profileData)
+        cardView.profilesData = profilesData
+        
+        cardView.view.isHidden = true
+        
+        cardView.delegate = self
+        self.addChild(cardView)
+        
+        view.addSubview(cardView.view)
+        cardView.view.translatesAutoresizingMaskIntoConstraints = false
+        cardView.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        cardView.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        cardView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        cardTopConstraint = cardView.view.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        cardTopConstraint.isActive = true
+        
+        cardView.view.clipsToBounds = true
+        
+        
     }
+    
+    func updateCardPosition(offset: CGFloat) {
+        cardTopConstraint.constant += offset
+        if cardTopConstraint.constant < -maxCardHeight {
+            cardTopConstraint.constant = -maxCardHeight
+        }
+    }
+    
+    func releaseCard(velocity: CGFloat) {
+        if velocity < -1.0 {
+            cardTopConstraint.constant = 0
+            displayingData = false
+            UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: velocity, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
+                self.shadowView.layer.opacity = self.displayingData ? 1.0 : 0.0
+                self.view.layoutIfNeeded()
+            }) { (finished) in
+                self.cardView.view.isHidden = !self.displayingData
+                self.shadowView.isHidden = !self.displayingData
+            }
+        } else {
+            cardTopConstraint.constant = -maxCardHeight
+            UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: velocity, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
+                self.shadowView.layer.opacity = self.displayingData ? 1.0 : 0.0
+                self.view.layoutIfNeeded()
+            }) { (finished) in
+                self.cardView.view.isHidden = !self.displayingData
+                self.shadowView.isHidden = !self.displayingData
+            }
+        }
+    }
+    
+    func totalOffset() -> CGFloat {
+        return cardTopConstraint.constant
+    }
+    func maxOffset() -> CGFloat {
+        return -maxCardHeight
+    }
+    
+    @objc func dismissCard(gesture: UILongPressGestureRecognizer?) {
+        if displayingData {
+            if let gesture = gesture {
+                if gesture.state == .began {
+                    cardTopConstraint.constant = 0
+                    displayingData = false
+                    UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
+                        self.shadowView.layer.opacity = self.displayingData ? 1.0 : 0.0
+                        self.view.layoutIfNeeded()
+                    }) { (finished) in
+                        self.cardView.view.isHidden = !self.displayingData
+                        self.shadowView.isHidden = !self.displayingData
+                    }
+                }
+            } else {
+                cardTopConstraint.constant = 0
+                displayingData = false
+                UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [UIView.AnimationOptions.curveEaseInOut, UIView.AnimationOptions.allowUserInteraction], animations: {
+                    self.shadowView.layer.opacity = self.displayingData ? 1.0 : 0.0
+                    self.view.layoutIfNeeded()
+                }) { (finished) in
+                    self.cardView.view.isHidden = !self.displayingData
+                    self.shadowView.isHidden = !self.displayingData
+                }
+            }
+        }
+    }
+    
+    @objc func showCard() {
+        cardView.tableView.reloadData()
+        displayingData = true
+        shadowView.isHidden = false
+        cardView.view.isHidden = false
+        cardTopConstraint.constant = -maxCardHeight
+        UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: UIView.AnimationOptions.curveEaseInOut, animations: {
+            self.shadowView.layer.opacity = self.displayingData ? 1.0 : 0.0
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)

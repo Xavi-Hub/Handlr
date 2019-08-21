@@ -27,10 +27,6 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.view.backgroundColor = UIColor.clear
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Me", style: .plain, target: self, action: #selector(showMeView))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Friends", style: .plain, target: self, action: #selector(showFriendsView))
@@ -55,6 +51,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         isShowing = false
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.view.backgroundColor = UIColor.white
     }
