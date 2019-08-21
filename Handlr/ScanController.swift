@@ -75,9 +75,10 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
     }
     
     @objc func showMeView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        navigationController?.pushViewController(MyProfilesPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil), animated: true)
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .horizontal
+//        navigationController?.pushViewController(MyProfilesPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil), animated: true)
+        navigationController?.pushViewController(MyProfileViewController(), animated: true)
     }
     
     @objc func showFriendsView() {

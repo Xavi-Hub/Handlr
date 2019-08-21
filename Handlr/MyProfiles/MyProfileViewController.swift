@@ -18,21 +18,24 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     let addCell = "addCell"
     let headerCell = "headerCell"
     var accountHeader = "accountHeader"
+    var profileButton = UIButton(type: .system)
     
     var accounts = [[Account]]()
     var inss = [Instagram]()
     var snas = [Snapchat]()
     var phos = [Phone]()
     
-    init(profileData: ProfileData) {
-        super.init(nibName: nil, bundle: nil)
-        self.profileData = profileData
-        self.setupAccounts()
-    }
+    var profilesData = [ProfileData]()
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//    init(profileData: ProfileData) {
+//        super.init(nibName: nil, bundle: nil)
+//        self.profileData = profileData
+//        self.setupAccounts()
+//    }
+//    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     var meView: UIView = {
         let view = UIView()
@@ -119,10 +122,55 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+        fetchProfiles()
+        
+        profileData = profilesData[0]
         
         setEditing(isEditing, animated: true)
         
+        setupNavBar()
         
+    }
+    
+    func setupNavBar() {
+        let navView = UIStackView()
+        let downArrowView = UIImageView(image: UIImage(named: "snapchat"))
+        downArrowView.translatesAutoresizingMaskIntoConstraints = false
+        profileButton.setTitle("Hello", for: .normal)
+        profileButton.tintColor = .white
+        profileButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        profileButton.addTarget(self, action: #selector(showProfiles), for: .touchUpInside)
+        navView.addArrangedSubview(profileButton)
+        navView.addArrangedSubview(downArrowView)
+        navView.axis = .horizontal
+        navView.alignment = .center
+        navView.distribution = .fill
+        
+        downArrowView.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        downArrowView.widthAnchor.constraint(equalTo: downArrowView.heightAnchor).isActive = true
+
+        navigationController?.navigationBar.tintColor = .white
+        navigationItem.titleView = navView
+    }
+
+    
+    func fetchProfiles() {
+        let request: NSFetchRequest<ProfileData> = NSFetchRequest<ProfileData>(entityName: "ProfileData")
+        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        request.sortDescriptors = [sortDescriptor]
+        let predicate = NSPredicate(format: "isMine = %d", true)
+        request.predicate = predicate
+        do {
+            profilesData = try AppDelegate.viewContext.fetch(request)
+        } catch {
+            print(error)
+        }
+        print(profilesData.count)
+
+    }
+    
+    @objc func showProfiles() {
+        fetchProfiles()
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {

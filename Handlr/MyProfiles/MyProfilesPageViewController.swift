@@ -6,6 +6,7 @@
 //  Copyright © 2019 Xavi Anderhub. All rights reserved.
 //
 
+/*
 import UIKit
 import CoreData
 
@@ -211,3 +212,4 @@ class MyProfilesPageViewController: UIPageViewController, UIPageViewControllerDe
 
     
 }
+ */
